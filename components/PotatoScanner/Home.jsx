@@ -32,7 +32,7 @@ export default function Home() {
 
             {/* Contenedor de imagen */}
             <TouchableOpacity style={{
-                borderColor: "gray",
+                borderColor: "#9CA3AF",
                 borderWidth: 2,
                 borderRadius: 10,
                 width: 200,
@@ -42,17 +42,26 @@ export default function Home() {
                 marginBottom: 20,
                 borderStyle: "dashed"
             }}>
-                <Icon name="upload" color="gray" size={40} />
+                <Icon name="upload" color="#9CA3AF" size={40} />
             </TouchableOpacity>
 
-            {/* Botón de captura */}
+            {/* BotOn de captura */}
             <TouchableOpacity style={{
                 backgroundColor: "black",
                 borderRadius: 5,
                 paddingVertical: 10,
-                paddingHorizontal: 20
+                paddingHorizontal: 20,
+                flexDirection: "row",
+                alignItems: "center"
             }} onPress={handleCapture}>
-                <Text style={{ color: "white" }}>Capture Potato Image</Text>
+                <Icon name="camera" size={15} color="white" style={{ marginRight: 10 }} />
+                <Text style={{
+                    color: "white",
+                    fontFamily: "Inter-Regular",
+                    fontSize: 13.5
+                }}>
+                    Capturar Imagen
+                </Text>
             </TouchableOpacity>
         </View>
     );

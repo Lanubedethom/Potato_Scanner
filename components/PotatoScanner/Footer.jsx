@@ -17,9 +17,21 @@ export default function Footer({ currentPage, setCurrentPage }) {
                 { name: "clock", label: "History" },
                 { name: "settings", label: "Settings" }
             ].map((item, index) => (
-                <TouchableOpacity key={index} onPress={() => setCurrentPage(item.name)} style={{ alignItems: "center" }}>
-                    <Icon name={item.name} size={24} color={currentPage === item.name ? "black" : "gray"} />
-                    <Text style={{ color: currentPage === item.name ? "black" : "gray", fontSize: 12 }}>{item.label}</Text>
+                <TouchableOpacity
+                    key={index} onPress={() => setCurrentPage(item.name)}
+                    style={{ alignItems: "center" }}
+                >
+                    <Icon
+                        name={item.name}
+                        size={15}
+                        color={currentPage === item.name ? "black" : "gray"}
+                    />
+                    <Text style={{
+                        color: currentPage === item.name ? "black" : "gray",
+                        fontSize: 12
+                    }}>
+                        {item.label}
+                    </Text>
                 </TouchableOpacity>
             ))}
         </View>
