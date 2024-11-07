@@ -19,14 +19,14 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
         setShowModal(visible);
     }, [visible]);
 
-    const handleClose = () => {
+    const handleClose = (accepted) => {
         setShowModal(false);
-        onClose(); // Llama a la función onClose pasada como prop
+        onClose(accepted);
     };
 
     return (
         <Center>
-            <Modal isOpen={showModal} onClose={handleClose} size="lg">
+            <Modal isOpen={showModal} onClose={() => handleClose(false)} size="lg">
                 <Modal.Content>
                     <Modal.CloseButton />
                     <Modal.Header>
@@ -42,7 +42,7 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                                 </Text>
                                 <Progress
                                     value={progress * 100}
-                                    size="xs" // Tamaño más pequeño para una barra más delgada
+                                    size="xs"
                                     colorScheme="black"
                                     width="100%"
                                     bg="gray.200" // Fondo de la barra de progreso
@@ -64,18 +64,19 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                     <Modal.Footer>
                         <Button.Group space={2}>
                             <Button
-                                variant="outline"
-                                colorScheme="black"
-                                onPress={handleClose}
+                                variant="solid"
+                                bg="black"
+                                onPress={() => handleClose(false)}
                             >
-                                <Text color="black">Cancelar</Text>
+                                <Text color="white">Cancelar</Text>
                             </Button>
                             {!process && (
                                 <Button
-                                    colorScheme="black"
-                                    onPress={handleClose}
+                                    variant="outline"
+                                    borderColor="black"
+                                    onPress={() => handleClose(true)}
                                 >
-                                    <Text color="white">Aceptar</Text>
+                                    <Text color="black">Aceptar</Text>
                                 </Button>
                             )}
                         </Button.Group>

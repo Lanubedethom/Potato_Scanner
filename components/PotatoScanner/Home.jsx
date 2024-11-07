@@ -5,7 +5,7 @@ import Potato from "../ui/Potato";
 import Dialog from "../ui/Dialog";
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Home() {
+export default function Home({ updateHistory }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [progress, setProgress] = useState(0);
     const [info, setInfo] = useState(null);
@@ -29,8 +29,8 @@ export default function Home() {
                     });
                     return 1;
                 }
-                return prev + 0.01; // Incremento más pequeño para un progreso más fluido
-            }, 50); // Intervalo más corto para un progreso más fluido
+                return prev + 0.02;
+            }, 50);
         });
     };
 
@@ -48,8 +48,16 @@ export default function Home() {
         }
     };
 
-    const handleClose = () => {
+    const handleClose = (accepted) => {
         setIsModalVisible(false);
+        if (accepted && info) {
+            updateHistory({
+                id: Date.now(),
+                date: info.date,
+                species: info.species,
+                description: info.description,
+            });
+        }
         setProgress(0);
         setInfo(null);
         setProcess(true);
@@ -128,7 +136,7 @@ export default function Home() {
                 progress={progress}
                 info={info}
                 process={process}
-                onClose={handleClose} // Pasa la función handleClose como prop
+                onClose={(accepted) => handleClose(accepted)} // Pasa la función handleClose como prop
             />
         </View>
     );

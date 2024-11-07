@@ -1,23 +1,19 @@
-import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView } from "react-native";
 import Card from "../ui/Card";
-import Potato from "../ui/Potato";
 
-export default function History() {
-    const scanHistory = [
-        {
-            id: 1,
-            date: "3/11/2024, 22:26:46",
-            species: "Russet Potato",
-            description: "A large, oblong potato with a russet-brown skin and white flesh. Ideal for baking and frying."
-        },
-        {
-            id: 2,
-            date: "3/11/2024, 22:26:31",
-            species: "Russet Potato",
-            description: "A large, oblong potato with a russet-brown skin and white flesh. Ideal for baking and frying."
-        },
-    ];
+export default function History({ newEntry }) {
+    const [scanHistory, setScanHistory] = useState([]);
+
+    useEffect(() => {
+        if (newEntry) {
+            setScanHistory((prevHistory) => [newEntry, ...prevHistory]);
+        }
+    }, [newEntry]);
+
+    const handleDelete = (id) => {
+        setScanHistory((prevHistory) => prevHistory.filter((scan) => scan.id !== id));
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -27,17 +23,20 @@ export default function History() {
                 justifyContent: "space-between",
                 padding: 15,
                 alignItems: "center",
-                boxShadow: "0px 2px 3px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "white",
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 3,
                 elevation: 3
-            }}
-            >
+            }}>
                 <Text style={{
                     color: "black",
                     marginLeft: 5,
                     fontSize: 14,
                     fontFamily: "Inter-Regular"
                 }}>
-                    Detalle
+                    Historial
                 </Text>
             </View>
 
@@ -49,7 +48,9 @@ export default function History() {
                             key={scan.id}
                             species={scan.species}
                             description={scan.description}
-                            date={scan.date} />
+                            date={scan.date}
+                            onDelete={() => handleDelete(scan.id)}
+                        />
                     ))
                 ) : (
                     <Text>No hay nada aquí aún, escanea una imagen.</Text>

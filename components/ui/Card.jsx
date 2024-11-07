@@ -13,7 +13,6 @@ export default function Card({ species, description, date, onDelete }) {
             alignItems: "center",
             position: "relative"
         }}>
-            <Icon name="image" size={40} color="#9CA3AF" style={{ marginRight: 15 }} />
             <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>{species}</Text>
                 <Text style={{ color: "gray" }}>{description}</Text>

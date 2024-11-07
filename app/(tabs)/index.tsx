@@ -14,17 +14,26 @@ export default function App() {
   });
 
   const [currentPage, setCurrentPage] = useState("home");
+  const [newEntry, setNewEntry] = useState(null);
 
   if (!fontsLoaded) {
     return <AppLoading />;
   }
 
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page);
+  };
+
+  const updateHistory = (entry: any) => {
+    setNewEntry(entry);
+  };
+
   return (
     <NativeBaseProvider>
-      {currentPage === "home" && <Home />}
-      {currentPage === "clock" && <History />}
+      {currentPage === "home" && <Home updateHistory={updateHistory} />}
+      {currentPage === "clock" && <History newEntry={newEntry} />}
       {currentPage === "settings" && <Settings />}
-      <Footer currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Footer currentPage={currentPage} setCurrentPage={handleNavigate} />
     </NativeBaseProvider>
   );
 }
