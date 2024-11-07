@@ -31,17 +31,6 @@ export default function History() {
                 elevation: 3
             }}
             >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Potato width={25} height={30} />
-                    <Text style={{
-                        fontSize: 18,
-                        fontWeight: "bold",
-                        fontFamily: "Pacifico",
-                        marginLeft: 10
-                    }}>
-                        Potato Scanner
-                    </Text>
-                </View>
                 <Text style={{
                     color: "black",
                     marginLeft: 5,

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { NativeBaseProvider } from "native-base";
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import Home from "../../components/PotatoScanner/Home";
@@ -19,11 +20,11 @@ export default function App() {
   }
 
   return (
-    <>
+    <NativeBaseProvider>
       {currentPage === "home" && <Home />}
       {currentPage === "clock" && <History />}
       {currentPage === "settings" && <Settings />}
       <Footer currentPage={currentPage} setCurrentPage={setCurrentPage} />
-    </>
+    </NativeBaseProvider>
   );
 }
