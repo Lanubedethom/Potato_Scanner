@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import Card from "../ui/Card";
 
 export default function History({ newEntry }) {
@@ -24,11 +24,8 @@ export default function History({ newEntry }) {
                 padding: 15,
                 alignItems: "center",
                 backgroundColor: "white",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 3,
-                elevation: 3
+                borderBottomWidth: 1,
+                borderBottomColor: "lightgray"
             }}>
                 <Text style={{
                     color: "black",
@@ -53,9 +50,24 @@ export default function History({ newEntry }) {
                         />
                     ))
                 ) : (
-                    <Text>No hay nada aquí aún, escanea una imagen.</Text>
+                    <View style={styles.container}>
+                        <Text style={styles.text}>Historial vacío, scanea un imagen para ver los detalles aquí.</Text>
+                    </View>
                 )}
             </ScrollView>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    text: {
+        textAlign: "center",
+        fontSize: 12,
+        color: "gray",
+    },
+});

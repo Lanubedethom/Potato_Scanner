@@ -21,7 +21,7 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
 
     const handleClose = (accepted) => {
         setShowModal(false);
-        onClose(accepted);
+        onClose(accepted); // Llama a la función onClose pasada como prop
     };
 
     return (
@@ -42,7 +42,7 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                                 </Text>
                                 <Progress
                                     value={progress * 100}
-                                    size="xs"
+                                    size="xs" // Tamaño más pequeño para una barra más delgada
                                     colorScheme="black"
                                     width="100%"
                                     bg="gray.200" // Fondo de la barra de progreso
@@ -52,13 +52,15 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                                 />
                             </VStack>
                         ) : (
-                            <VStack space={4}>
-                                <Text fontSize="lg" bold color="black">
-                                    {info.species}
-                                </Text>
-                                <Text color="gray">{info.description}</Text>
-                                <Text color="gray">{info.date}</Text>
-                            </VStack>
+                            info && (
+                                <VStack space={4}>
+                                    <Text fontSize="lg" bold color="black">
+                                        {info.species}
+                                    </Text>
+                                    <Text color="gray">{info.description}</Text>
+                                    <Text color="gray">{info.date}</Text>
+                                </VStack>
+                            )
                         )}
                     </Modal.Body>
                     <Modal.Footer>

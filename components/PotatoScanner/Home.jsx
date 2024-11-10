@@ -29,9 +29,30 @@ export default function Home({ updateHistory }) {
                     });
                     return 1;
                 }
-                return prev + 0.02;
+                return prev + 0.1;
             }, 50);
         });
+    };
+
+    const handleTakePhoto = async () => {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert("Permiso para acceder a cámara es requerido!");
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setSelectedImage(result.assets[0].uri);
+            handleCapture();
+        }
     };
 
     const handleImagePicker = async () => {
@@ -119,7 +140,7 @@ export default function Home({ updateHistory }) {
                     flexDirection: "row",
                     alignItems: "center"
                 }}
-                onPress={handleCapture}
+                onPress={handleTakePhoto}
             >
                 <Icon name="camera" size={15} color="white" style={{ marginRight: 10 }} />
                 <Text style={{

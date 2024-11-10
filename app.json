@@ -1,10 +1,9 @@
 {
   "expo": {
-    "name": "potato_scanner",
+    "name": "Kipa",
     "slug": "potato_scanner",
     "version": "1.0.0",
     "orientation": "portrait",
-    "entryPoint": "./app/index.jsx",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -20,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.potatoscanner"
     },
     "web": {
       "bundler": "metro",
@@ -28,7 +28,17 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/PacificoRegular.ttf",
+            "./assets/fonts/Inter18ptMedium.ttf",
+            "./assets/fonts/Inter28ptItalic.ttf"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
