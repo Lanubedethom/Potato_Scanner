@@ -31,7 +31,7 @@ export default function History({ newEntry }) {
                     color: "black",
                     marginLeft: 5,
                     fontSize: 14,
-                    fontFamily: "Inter-Regular"
+                    fontFamily: "InterRegular"
                 }}>
                     Historial
                 </Text>

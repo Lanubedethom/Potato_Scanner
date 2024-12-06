@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kipa",
     "slug": "potato_scanner",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -29,19 +29,18 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/fonts/PacificoRegular.ttf",
-            "./assets/fonts/Inter18ptMedium.ttf",
-            "./assets/fonts/Inter28ptItalic.ttf"
-          ]
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6c99ddd4-6a55-4096-8b44-659e7beab23a"
+      }
     }
   }
 }

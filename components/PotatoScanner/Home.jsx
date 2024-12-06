@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Feather";
 import Potato from "../ui/Potato";
 import Dialog from "../ui/Dialog";
 import * as ImagePicker from 'expo-image-picker';
+import { predictEspecie } from "../../api/api";
 
 export default function Home({ updateHistory }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -12,27 +13,48 @@ export default function Home({ updateHistory }) {
     const [process, setProcess] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
 
-    const handleCapture = () => {
-        setIsModalVisible(true);
-        setProgress(0);
-        setProcess(true);
+    const fetchPrediction = async (imageUri) => {
+        try {
+            // Convertir la base64 a Blob
+            const byteString = atob(imageUri.split(',')[1]); // Eliminar el encabezado base64
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uintArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uintArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([uintArray], { type: 'image/png' });
 
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 1) {
-                    clearInterval(interval);
-                    setProcess(false);
-                    setInfo({
-                        species: "Russet Potato",
-                        description: "A large, oblong potato with a russet-brown skin and white flesh. Ideal for baking and frying.",
-                        date: new Date().toLocaleString()
-                    });
-                    return 1;
-                }
-                return prev + 0.1;
-            }, 50);
-        });
+            // Crear el FormData para enviar el archivo
+            const formData = new FormData();
+            formData.append('file', blob, 'imagen.png'); // El nombre del archivo puede ser ajustado
+
+            // Realizar la solicitud POST
+            const response = await fetch('http://127.0.0.1:8000/predict/', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.detail || 'Error durante la predicción');
+            }
+
+            console.log('Respuesta del servidor:', data);
+            // Actualizar el estado info con los datos recibidos
+            setInfo({
+                species: data.especie,
+                description: "Descripción de la especie predicha.",
+                date: new Date().toLocaleString()
+            });
+
+            return data
+        } catch (error) {
+            console.error('Papa nativa peruana:', error);
+            throw error; // Volver a lanzar el error para manejarlo donde sea necesario
+        }
     };
+
+
 
     const handleTakePhoto = async () => {
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -50,8 +72,10 @@ export default function Home({ updateHistory }) {
         });
 
         if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri);
-            handleCapture();
+            const imageUri = result.assets[0].uri; // Guarda la URI primero
+            setSelectedImage(imageUri); // Actualiza el estado
+            // Llama a handleCapture después de actualizar el estado
+            handleCapture(imageUri);
         }
     };
 
@@ -64,10 +88,45 @@ export default function Home({ updateHistory }) {
         });
 
         if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri);
-            handleCapture();
+            const imageUri = result.assets[0].uri; // Guarda la URI primero
+            setSelectedImage(imageUri); // Actualiza el estado
+            // Llama a handleCapture después de actualizar el estado
+            handleCapture(imageUri);
         }
     };
+
+    const handleCapture = (imageUri) => {
+        setIsModalVisible(true);
+        setProgress(0);
+        setProcess(true);
+
+        console.log("Captura de imagen:", imageUri); // Ahora usamos imageUri directamente
+
+        const fetchPredictionPromise = fetchPrediction(imageUri);
+
+        const intervalPromise = new Promise((resolve) => {
+            const interval = setInterval(() => {
+                setProgress((prev) => {
+                    if (prev >= 1) {
+                        clearInterval(interval);
+                        resolve();
+                        return 1;
+                    }
+                    return prev + 0.1;
+                }, 50);
+            });
+        });
+
+        Promise.all([fetchPredictionPromise, intervalPromise])
+            .then(() => {
+                setProcess(false);
+            })
+            .catch((error) => {
+                console.error('Error durante la predicción o el progreso:', error);
+                setProcess(false);
+            });
+    };
+
 
     const handleClose = (accepted) => {
         setIsModalVisible(false);
@@ -82,7 +141,6 @@ export default function Home({ updateHistory }) {
         setProgress(0);
         setInfo(null);
         setProcess(true);
-        setSelectedImage(null);
     };
 
     return (
@@ -92,7 +150,8 @@ export default function Home({ updateHistory }) {
                 width: 100,
                 height: 100,
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
+                marginTop: 40,
             }}>
                 <Potato width={50} height={50} />
             </View>
@@ -101,11 +160,12 @@ export default function Home({ updateHistory }) {
             <Text style={{
                 fontSize: 24,
                 fontWeight: "bold",
-                fontFamily: "Pacifico",
+                fontFamily: 'PacificoRegular',
                 marginBottom: 20,
+                fontStyle: "italic",
                 color: "black"
             }}>
-                Potato Scanner
+                Kipa
             </Text>
 
             {/* Contenedor de imagen */}
@@ -145,7 +205,7 @@ export default function Home({ updateHistory }) {
                 <Icon name="camera" size={15} color="white" style={{ marginRight: 10 }} />
                 <Text style={{
                     color: "white",
-                    fontFamily: "Inter-Regular",
+                    fontFamily: "InterRegular",
                     fontSize: 13.5
                 }}>
                     Capturar Imagen

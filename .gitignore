@@ -19,3 +19,23 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+
+# Python
+__pycache__/
+*.py[cod]
+*.pkl
+*.h5
+*.onnx
+*.csv
+*.log
+
+# FastAPI
+*.env
+*.env.*
+*.local
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/

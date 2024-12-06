@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { StatusBar } from "react-native";
+import React, { useState } from "react";
+import { StatusBar, View } from "react-native";
 import { NativeBaseProvider } from "native-base";
-import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import Home from "../../components/PotatoScanner/Home";
 import History from "../../components/PotatoScanner/History";
@@ -10,23 +9,9 @@ import Settings from "../../components/PotatoScanner/Settings";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+export default function HomeScreen() {
   const [currentPage, setCurrentPage] = useState("home");
   const [newEntry, setNewEntry] = useState(null);
-  const [loaded, error] = useFonts({
-    'Pacifico': require('../../assets/fonts/PacificoRegular.ttf'),
-    'Inter-Regular': require('../../assets/fonts/Inter18ptMedium.ttf'),
-  })
-
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
 
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
