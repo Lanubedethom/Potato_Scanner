@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Platform } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import Potato from "../ui/Potato";
 import Dialog from "../ui/Dialog";
 import * as ImagePicker from 'expo-image-picker';
 import { predictEspecie } from "../../api/api";
+import * as FileSystem from 'expo-file-system';
 
 export default function Home({ updateHistory }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -13,23 +14,49 @@ export default function Home({ updateHistory }) {
     const [process, setProcess] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
 
+    const BASE_URL = 'https://api-potato.onrender.com';
+
     const fetchPrediction = async (imageUri) => {
         try {
-            // Convertir la base64 a Blob
-            const byteString = atob(imageUri.split(',')[1]); // Eliminar el encabezado base64
-            const arrayBuffer = new ArrayBuffer(byteString.length);
-            const uintArray = new Uint8Array(arrayBuffer);
-            for (let i = 0; i < byteString.length; i++) {
-                uintArray[i] = byteString.charCodeAt(i);
-            }
-            const blob = new Blob([uintArray], { type: 'image/png' });
-
-            // Crear el FormData para enviar el archivo
             const formData = new FormData();
-            formData.append('file', blob, 'imagen.png'); // El nombre del archivo puede ser ajustado
 
-            // Realizar la solicitud POST
-            const response = await fetch('http://127.0.0.1:8000/predict/', {
+            // Verificar si estamos en web o mobile
+            if (Platform.OS === 'web') {
+                // Mantener tu código actual para web
+                const base64Index = imageUri.indexOf(';base64,');
+                const mimeType = imageUri.substring(5, base64Index);
+                const base64Data = imageUri.substring(base64Index + 8);
+
+                const byteString = atob(imageUri.split(',')[1]);
+                const arrayBuffer = new ArrayBuffer(byteString.length);
+                const uintArray = new Uint8Array(arrayBuffer);
+                for (let i = 0; i < byteString.length; i++) {
+                    uintArray[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([uintArray], { type: mimeType });
+                formData.append('file', blob, `imagen.${mimeType.split('/')[1]}`);
+            } else {
+                // New mobile code using FileSystem
+                try {
+                    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+                        encoding: FileSystem.EncodingType.Base64,
+                    });
+
+                    formData.append('file', {
+                        uri: imageUri,
+                        type: 'image/jpeg',
+                        name: 'image.jpg',
+                        data: base64
+                    });
+
+                    console.log('Image encoded successfully');
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                    throw error;
+                }
+            }
+
+            const response = await fetch(`${BASE_URL}/predict/`, {
                 method: 'POST',
                 body: formData,
             });
@@ -40,17 +67,16 @@ export default function Home({ updateHistory }) {
             }
 
             console.log('Respuesta del servidor:', data);
-            // Actualizar el estado info con los datos recibidos
             setInfo({
                 species: data.especie,
-                description: "Descripción de la especie predicha.",
+                description: "Papa nativa peruana.",
                 date: new Date().toLocaleString()
             });
 
-            return data
+            return data;
         } catch (error) {
-            console.error('Papa nativa peruana:', error);
-            throw error; // Volver a lanzar el error para manejarlo donde sea necesario
+            console.error('Error de red:', error);
+            throw error;
         }
     };
 
@@ -100,7 +126,7 @@ export default function Home({ updateHistory }) {
         setProgress(0);
         setProcess(true);
 
-        console.log("Captura de imagen:", imageUri); // Ahora usamos imageUri directamente
+        console.log("Captura de imagen:", imageUri);
 
         const fetchPredictionPromise = fetchPrediction(imageUri);
 
@@ -126,6 +152,7 @@ export default function Home({ updateHistory }) {
                 setProcess(false);
             });
     };
+
 
 
     const handleClose = (accepted) => {
