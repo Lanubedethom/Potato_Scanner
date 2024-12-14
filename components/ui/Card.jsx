@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
-export default function Card({ species, description, date, onDelete }) {
+export default function Card({ species, confianza, description, date, onDelete }) {
     return (
         <View style={{
             flexDirection: "row",
@@ -15,6 +15,7 @@ export default function Card({ species, description, date, onDelete }) {
         }}>
             <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>{species}</Text>
+                <Text style={{ color: "gray" }}>Confianza: {confianza}</Text>
                 <Text style={{ color: "gray" }}>{description}</Text>
                 <Text style={{ fontSize: 10, color: "gray", marginTop: 5 }}>{date}</Text>
             </View>

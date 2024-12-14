@@ -42,7 +42,7 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                                 </Text>
                                 <Progress
                                     value={progress * 100}
-                                    size="xs" // Tamaño más pequeño para una barra más delgada
+                                    size="xs"
                                     colorScheme="black"
                                     width="100%"
                                     bg="gray.200" // Fondo de la barra de progreso
@@ -57,6 +57,7 @@ export default function Dialog({ visible, progress, info, process, onClose }) {
                                     <Text fontSize="lg" bold color="black">
                                         {info.species}
                                     </Text>
+                                    <Text color="gray">Confianza: {info.confianza}%</Text>
                                     <Text color="gray">{info.description}</Text>
                                     <Text color="gray">{info.date}</Text>
                                 </VStack>

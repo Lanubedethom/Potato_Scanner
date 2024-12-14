@@ -105,7 +105,6 @@ def extraer_caracteristicas(imagen, especie):
 # Ruta de predicción
 
 
-# Ruta de predicción
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
     try:
@@ -113,7 +112,8 @@ async def predict(file: UploadFile = File(...)):
         extension = os.path.splitext(file.filename)[-1].lower()
         if extension not in {'.jpg', '.jpeg', '.png', '.bmp', '.tiff'}:
             raise HTTPException(
-                status_code=400, detail="Formato de archivo no permitido.")
+                status_code=400, detail="Formato de archivo no permitido."
+            )
 
         # Leer el archivo cargado
         contents = await file.read()
@@ -123,13 +123,15 @@ async def predict(file: UploadFile = File(...)):
 
         if image is None:
             raise HTTPException(
-                status_code=400, detail="No se pudo leer la imagen.")
+                status_code=400, detail="No se pudo leer la imagen."
+            )
 
         # Extraer características
         vector = extraer_caracteristicas(image, especie=1)
         if vector is None:
             raise HTTPException(
-                status_code=400, detail="No se pudieron extraer características de la imagen.")
+                status_code=400, detail="No se pudieron extraer características de la imagen."
+            )
 
         # Realizar predicción
         datos_entrada = np.array([vector[1:]])  # Ignorar la columna "Especie"
@@ -137,13 +139,34 @@ async def predict(file: UploadFile = File(...)):
 
         input_name = ort_session.get_inputs()[0].name
         result = ort_session.run(
-            None, {input_name: datos_entrada_estandarizados.astype(np.float32)})
+            None, {input_name: datos_entrada_estandarizados.astype(np.float32)}
+        )
 
-        prediccion = result[0]
-        especie_predicha = encoder.inverse_transform(prediccion.reshape(-1, 1))
+        # Verifica la salida del modelo
+        print(f"Resultado del modelo: {result}")
+        predicciones = result[0]
 
-        return {"especie": especie_predicha[0][0]}
+        # Asegúrate de que la salida sea un array
+        if isinstance(predicciones, np.ndarray):
+            # Índice de la clase más probable
+            indice_predicho = np.argmax(predicciones)
+            # Probabilidad de la clase predicha
+            confianza = predicciones[indice_predicho]
+        else:
+            raise HTTPException(
+                status_code=500, detail="La salida del modelo no es un array válido."
+            )
+
+        # Obtener el nombre de la especie predicha
+        especie_predicha = encoder.inverse_transform([[indice_predicho]])
+
+        return {
+            "especie": especie_predicha[0][0],
+            # Asegurarse de que sea un número flotante
+            "confianza": round(float(confianza), 2)
+        }
 
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Error procesando la predicción: {str(e)}")
+            status_code=500, detail=f"Error procesando la predicción: {str(e)}"
+        )

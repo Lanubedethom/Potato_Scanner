@@ -1,50 +1,78 @@
-# POTATO SCANNER APP 👋
+# Potato Scanner App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Descripción
 
-## Get started
+Potato Scanner es una aplicación que permite a los usuarios capturar imágenes de papas y obtener predicciones sobre la especie de la papa y la confianza de la predicción. La aplicación consta de una API desarrollada con FastAPI y una interfaz de usuario desarrollada con React Native.
 
-1. Install dependencies
+## Requisitos
 
-   ```bash
-   npm install
-   ```
+- Python 3.8+
+- Node.js
+- FastAPI
+- ONNX Runtime
+- Scikit-learn
+- OpenCV
+- React Native
 
-2. Start the app
+## Instalación
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clonar el repositorio
 
 ```bash
-npm run reset-project
+git clone https://github.com/tu_usuario/potato_scanner.git
+cd potato_scanner
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Configurar y ejecutar la API
 
-## Learn more
+La API está ubicada en la carpeta `api` y se encuentra en el archivo `main.py`. Debes ejecutar la API primero para que la aplicación cliente pueda hacer las predicciones.
 
-To learn more about developing your project with Expo, look at the following resources:
+#### Instalar dependencias
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+cd api
+pip install -r requirements.txt
+```
 
-## Join the community
+#### Ejecutar la API
 
-Join our community of developers creating universal apps.
+```bash
+uvicorn main:app --reload
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+La API estará disponible en `http://localhost:8000`.
+
+### 3. Configurar y ejecutar la aplicación cliente
+
+#### Instalar dependencias
+
+```bash
+cd ../client
+npm install
+```
+
+#### Ejecutar la aplicación
+
+```bash
+npm start
+```
+
+## Uso
+
+1. Abre la aplicación cliente en tu dispositivo o emulador.
+2. Captura una imagen de una papa usando la cámara o selecciona una imagen desde la galería.
+3. La aplicación enviará la imagen a la API para obtener la predicción.
+4. La predicción y la confianza se mostrarán en la pantalla.
+
+## Capturas de pantalla
+
+![Pantalla de inicio](assets/images/kipa.png)
+![Pantalla de predicción](assets/images/kipa2.png)
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request para discutir cualquier cambio que te gustaría realizar.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT.

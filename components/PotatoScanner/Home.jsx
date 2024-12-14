@@ -14,15 +14,13 @@ export default function Home({ updateHistory }) {
     const [process, setProcess] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
 
-    const BASE_URL = 'https://api-potato.onrender.com';
+    const BASE_URL = 'http://localhost:8000';
 
     const fetchPrediction = async (imageUri) => {
         try {
             const formData = new FormData();
 
-            // Verificar si estamos en web o mobile
             if (Platform.OS === 'web') {
-                // Mantener tu código actual para web
                 const base64Index = imageUri.indexOf(';base64,');
                 const mimeType = imageUri.substring(5, base64Index);
                 const base64Data = imageUri.substring(base64Index + 8);
@@ -36,7 +34,6 @@ export default function Home({ updateHistory }) {
                 const blob = new Blob([uintArray], { type: mimeType });
                 formData.append('file', blob, `imagen.${mimeType.split('/')[1]}`);
             } else {
-                // New mobile code using FileSystem
                 try {
                     const base64 = await FileSystem.readAsStringAsync(imageUri, {
                         encoding: FileSystem.EncodingType.Base64,
@@ -70,7 +67,8 @@ export default function Home({ updateHistory }) {
             setInfo({
                 species: data.especie,
                 description: "Papa nativa peruana.",
-                date: new Date().toLocaleString()
+                date: new Date().toLocaleString(),
+                confianza: data.confianza,
             });
 
             return data;
@@ -100,7 +98,6 @@ export default function Home({ updateHistory }) {
         if (!result.canceled) {
             const imageUri = result.assets[0].uri; // Guarda la URI primero
             setSelectedImage(imageUri); // Actualiza el estado
-            // Llama a handleCapture después de actualizar el estado
             handleCapture(imageUri);
         }
     };
@@ -116,7 +113,6 @@ export default function Home({ updateHistory }) {
         if (!result.canceled) {
             const imageUri = result.assets[0].uri; // Guarda la URI primero
             setSelectedImage(imageUri); // Actualiza el estado
-            // Llama a handleCapture después de actualizar el estado
             handleCapture(imageUri);
         }
     };
@@ -154,7 +150,6 @@ export default function Home({ updateHistory }) {
     };
 
 
-
     const handleClose = (accepted) => {
         setIsModalVisible(false);
         if (accepted && info) {
@@ -163,6 +158,7 @@ export default function Home({ updateHistory }) {
                 date: info.date,
                 species: info.species,
                 description: info.description,
+                confianza: info.confianza,
             });
         }
         setProgress(0);
@@ -244,7 +240,7 @@ export default function Home({ updateHistory }) {
                 progress={progress}
                 info={info}
                 process={process}
-                onClose={(accepted) => handleClose(accepted)} // Pasa la función handleClose como prop
+                onClose={(accepted) => handleClose(accepted)}
             />
         </View>
     );

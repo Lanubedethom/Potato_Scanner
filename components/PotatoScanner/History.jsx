@@ -44,6 +44,7 @@ export default function History({ newEntry }) {
                         <Card
                             key={scan.id}
                             species={scan.species}
+                            confianza={scan.confianza}
                             description={scan.description}
                             date={scan.date}
                             onDelete={() => handleDelete(scan.id)}
