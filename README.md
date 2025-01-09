@@ -1,12 +1,5 @@
 # Potato Scanner App
 
-## Autores
-
-- Callapina Castilla Ciro Gabriel
-- Condorcahua Ayllone Ferdinan Junior  
-- Cordova Ccopa Emerson
-- Mamani Crispin Isai Isaac
-
 ## Descripción
 
 Potato Scanner es una aplicación que permite a los usuarios capturar imágenes de papas y obtener predicciones sobre la especie de la papa y la confianza de la predicción. La aplicación consta de una API desarrollada con FastAPI y una interfaz de usuario desarrollada con React Native.
